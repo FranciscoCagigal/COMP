@@ -1,0 +1,30 @@
+PARSER_BEGIN(Exemplo)
+// código Java que invoca o parser
+public class Exemplo {
+ public static void main(String args[]) throws ParseException {
+// criação do objecto utilizando o constructor com argumento para
+// ler do standard input (teclado)
+ Exemplo parser = new Exemplo(System.in);
+ parser.Aritm2();
+ }
+}
+PARSER_END(Exemplo)
+// símbolos que não devem ser considerados na análise
+SKIP:{" " | "\t" | "\r"}
+// definição dos tokens (símbolos terminais)
+TOKEN :{<INTEGER:(["0"-"9"])+>|<LF:"\n">|<OPER:("+"|"-")>}
+// definição da produção
+void Aritm() : {}
+{
+<INTEGER> ( <OPER> <INTEGER> )? <LF> // “(...)?” é equivalente a “[...]”
+}
+
+void Aritm2():{Token t1, t2, t3;} //no bloco definido pelas primeiras chavetas declaram-se variáveispara a função
+{
+	t1=<INTEGER> {
+		System.out.println("Integer = "+t1.image); //image tem o valor String do token
+	}
+	(t3=<OPER>{System.out.println("Oper = "+t3.image);} t2=<INTEGER> {
+		System.out.println("Integer = "+t2.image);
+		})? (<LF>)
+}
