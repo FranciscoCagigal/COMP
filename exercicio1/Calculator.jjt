@@ -5,12 +5,22 @@ options
 PARSER_BEGIN(Calculator)
 public class Calculator
 {
+	public static HashMap<String, Integer> map = new HashMap<String, Integer>();
+
  public static void main(String args[]) throws ParseException {
 	Calculator myCalc = new Calculator(System.in);
 	SimpleNode root = myCalc.Expression(); // devolve referência para o nó raiz da árvore
 
 	root.dump(""); // imprime no ecrã a árvore
 	System.out.println("Valor da expressão: "+myCalc.eval(root));
+ }
+ 
+ protected void putValue(String k, int v){
+	map.put(k,v);
+ }
+ 
+ protected void getValue(String k){
+	map.get(k);
  }
  
  int eval(SimpleNode node) {
@@ -40,7 +50,7 @@ PARSER_END(Calculator)
 
 SKIP:{" "| "\r" | "\t"}
 
-TOKEN:{< INTEGER:(["0"-"9"])+ >|<SYMBOL:["a"-"z","A"-"Z"](["0"-"9","a"-"z","A"-"Z"])>|SEMICOLON: ";"|< LF: "\n" >}
+TOKEN:{< INTEGER:(["0"-"9"])+ >|<SYMBOL:["a"-"z","A"-"Z"](["0"-"9","a"-"z","A"-"Z"])>|<SEMICOLON: ";">|< LF: "\n" >}
 
 SimpleNode Expression(): {}
 {
