@@ -1,8 +1,9 @@
 options
 {
- LOOKAHEAD=1;
+ LOOKAHEAD=2;
 }
 PARSER_BEGIN(Calculator)
+import java.util.HashMap;
 public class Calculator
 {
 	public static HashMap<String, Integer> map = new HashMap<String, Integer>();
@@ -15,11 +16,11 @@ public class Calculator
 	System.out.println("Valor da expressão: "+myCalc.eval(root));
  }
  
- protected void putValue(String k, int v){
+ public void putValue(String k, int v){
 	map.put(k,v);
  }
  
- protected void getValue(String k){
+ public void getValue(String k){
 	map.get(k);
  }
  
@@ -50,11 +51,11 @@ PARSER_END(Calculator)
 
 SKIP:{" "| "\r" | "\t"}
 
-TOKEN:{< INTEGER:(["0"-"9"])+ >|<SYMBOL:["a"-"z","A"-"Z"](["0"-"9","a"-"z","A"-"Z"])>|<SEMICOLON: ";">|< LF: "\n" >}
+TOKEN:{< INTEGER:(["0"-"9"])+ >|<SYMBOL:["a"-"z","A"-"Z"](["0"-"9","a"-"z","A"-"Z"])*>|< LF: "\n" >}
 
-SimpleNode Expression(): {}
+SimpleNode Expression(): {Token k,v;}
 {
- Expr1() <LF> {return jjtThis;} // código Java entre chavetas (jjThis representa o nó)
+ (k=<SYMBOL>"="v=<INTEGER> {map.put(k.image,Integer.parseInt(v.image));}";" <LF>)* Expr1()";" <LF> {return jjtThis;} // código Java entre chavetas (jjThis representa o nó)
 }
 
 void Expr1() #void: {}
@@ -68,5 +69,5 @@ void Expr2(int sign) #void: {} // 1: positive; -1: negative
 
 void Expr3(int sign) #void: {Token t;}
 {
- t=<INTEGER>{jjtThis.val = sign * Integer.parseInt(t.image);} #Term | "-" Expr3(-1)| "(" Expr1() ")"
+ (t=<INTEGER>{jjtThis.val = sign * Integer.parseInt(t.image);}| t=<SYMBOL>{jjtThis.val = sign * map.get(t.image);}) #Term | "-" Expr3(-1)| "(" Expr1() ")"
 }

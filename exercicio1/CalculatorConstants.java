@@ -11,7 +11,9 @@ public interface CalculatorConstants {
   /** RegularExpression Id. */
   int INTEGER = 4;
   /** RegularExpression Id. */
-  int LF = 5;
+  int SYMBOL = 5;
+  /** RegularExpression Id. */
+  int LF = 6;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -23,7 +25,10 @@ public interface CalculatorConstants {
     "\"\\r\"",
     "\"\\t\"",
     "<INTEGER>",
+    "<SYMBOL>",
     "\"\\n\"",
+    "\"=\"",
+    "\";\"",
     "\"+\"",
     "\"-\"",
     "\"*\"",
